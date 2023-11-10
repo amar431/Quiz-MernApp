@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import {useSelector,useDispatch} from 'react-redux'
+import { authSuccess,authFailure } from '../../redux/user/userSlice'; 
 import axios from 'axios';
 
 
 function Home() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [quizQuestions, setQuizQuestions] = useState(null);
+  const dispatch = useDispatch()
+  const {isAuthenticated} = useSelector((state)=>state.user);
+  
+  
   
  
   // Use useEffect to check authentication status when the component mounts
@@ -16,14 +20,16 @@ function Home() {
       .then((response) => {
         if (response.data.authenticated) {
           console.log('user is authenticated');
-          setIsAuthenticated(true);
-          setQuizQuestions(response.data)
+          dispatch(authSuccess(true))
         }
-      
+             
         
       })
       .catch((error) => {
-        console.error('Error fetching questions:', error);
+        dispatch(authFailure(false))
+        console.error('Error not authenticated:', error);
+       
+        
       });
   }, []);
   
@@ -44,7 +50,7 @@ function Home() {
     <h1 className="text-4xl font-semibold mb-8 text-center">Welcome to the Quiz App</h1>
     {isAuthenticated ? (
       
-      <button onClick={() => navigate("/quiz", { state: quizQuestions })} className="bg-blue-500 hover:bg-blue-600 text-white py-4 px-6 rounded-lg text-2xl">
+      <button onClick={() => navigate("/quiz")} className="bg-blue-500 hover:bg-blue-600 text-white py-4 px-6 rounded-lg text-2xl">
         Take Quiz
       </button>
     

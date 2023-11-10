@@ -4,13 +4,16 @@ import './index.css';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
 
+import Store from './redux/Store';
+import {Provider} from 'react-redux'
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <div>
+  <Provider store={Store}>
     <App />
     <ToastContainer />
-  </div>
+  </Provider>
 );
 
 
